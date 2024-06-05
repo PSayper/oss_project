@@ -47,23 +47,24 @@ rate_text = ingame_font.render(str(rate), False, (255,255,255))
 judgement_data = [0,0,0,0]
 def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
     global combo, miss_anim, last_combo, rate
-    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 200 * note_speed * (h/900)):
+    
+    if abs(Time - judgement_data[n - 1]) < 2 and abs(Time - judgement_data[n - 1]) >= 1:
         last_combo = combo
         miss_anim = 1
         combo = 0
         rate = "FAIL"
-    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 100 * note_speed * (h/900)):
+    if abs(Time - judgement_data[n - 1]) < 1 and abs(Time - judgement_data[n - 1]) >= 0.35:
         last_combo = combo
         miss_anim = 1
         combo = 0
         rate = "MISS"
-    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 50 * note_speed * (h/900)):
+    if abs(Time - judgement_data[n - 1]) < 0.35 and abs(Time - judgement_data[n - 1]) >= 0.07:
         combo += 1
         rate = "GOOD"
-    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 15 * note_speed * (h/900)):
+    if abs(Time - judgement_data[n - 1]) < 0.07 and abs(Time - judgement_data[n - 1]) >= 0.035:
         combo += 1
         rate = "COOL"
-    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 0 * note_speed * (h/900)):
+    if abs(Time - judgement_data[n - 1]) < 0.035 and abs(Time - judgement_data[n - 1]) >= 0:
         combo += 1
         rate = "KOOL"
 
@@ -84,6 +85,7 @@ def deploy_note(n): # function for summoning note
 while main:
     while ingame:
 
+        pygame.display.set_caption("EZ2OSS : Combo" + str(combo))
         if len(t1) > 0:
             judgement_data[0] = t1[0][1]
         if len(t2) > 0:
@@ -212,5 +214,15 @@ while main:
         rate_text = ingame_font.render(str(rate), False, (255,255,255))
         screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
 
+        if combo >= 50:
+            break
+
         pygame.display.flip()
         clock.tick(maxframe)
+
+    break
+
+clear = "CONGRATULATIONS! YOU CLEARED THE GAME!"
+clear_text = ingame_font.render(str(clear), False, (255,255,255))
+screen.blit(clear_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - clear_text.get_height()/2))
+time.sleep(5)
