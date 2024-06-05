@@ -37,50 +37,34 @@ note_deploy_time = 0
 notedeployer_1 = 0
 notedeployer_2 = 0
 
-last_combo = 0
-combo_effect = 0
-combo_effect2 = 0
 miss_anim = 0
 combo = 0
-combo_time = 0
-rate = 0
+rate = ""
+
+ingame_font = pygame.font.SysFont("arial", int(w/23), False, True)
+rate_text = ingame_font.render(str(rate), False, (255,255,255))
 
 judgement_data = [0,0,0,0]
 def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
-    global combo, miss_anim, last_combo, combo_effect, combo_effect2, combo_time, rate
+    global combo, miss_anim, last_combo, rate
     if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 200 * note_speed * (h/900)):
         last_combo = combo
         miss_anim = 1
         combo = 0
-        combo_effect = 0.2
-        combo_time = Time + 1
-        combo_effect2 = 1.3
         rate = "FAIL"
     if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 100 * note_speed * (h/900)):
         last_combo = combo
         miss_anim = 1
         combo = 0
-        combo_effect = 0.2
-        combo_time = Time + 1
-        combo_effect2 = 1.3
         rate = "MISS"
     if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 50 * note_speed * (h/900)):
         combo += 1
-        combo_effect = 0.2
-        combo_time = Time + 1
-        combo_effect2 = 1.3
         rate = "GOOD"
     if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 15 * note_speed * (h/900)):
         combo += 1
-        combo_effect = 0.2
-        combo_time = Time + 1
-        combo_effect2 = 1.3
         rate = "COOL"
     if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 0 * note_speed * (h/900)):
         combo += 1
-        combo_effect = 0.2
-        combo_time = Time + 1
-        combo_effect2 = 1.3
         rate = "KOOL"
 
 
@@ -103,11 +87,11 @@ while main:
         if len(t1) > 0:
             judgement_data[0] = t1[0][0]
         if len(t2) > 0:
-            judgement_data[1] = t1[0][0]
+            judgement_data[1] = t2[0][0]
         if len(t3) > 0:
-            judgement_data[2] = t1[0][0]
+            judgement_data[2] = t3[0][0]
         if len(t4) > 0:
-            judgement_data[3] = t1[0][0]
+            judgement_data[3] = t4[0][0]
 
         if Time > 0.2 * note_deploy_time: # randomly deploy note over tick
             note_deploy_time += 1
@@ -131,21 +115,25 @@ while main:
                     if len(t1) > 0:
                         if t1[0][0] > h/2:
                             del t1[0]
+                    judge_note(1)
                 if event.key == pygame.K_d:
                     keyset[1] = 1
                     if len(t2) > 0:
                         if t2[0][0] > h/2:
                             del t2[0]
+                    judge_note(2)
                 if event.key == pygame.K_l:
                     keyset[2] = 1
                     if len(t3) > 0:
                         if t3[0][0] > h/2:
                             del t3[0]
+                    judge_note(3)
                 if event.key == pygame.K_SEMICOLON:
                     keyset[3] = 1
                     if len(t4) > 0:
                         if t4[0][0] > h/2:
                             del t4[0]
+                    judge_note(4)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s:
                     keyset[0] = 0
@@ -181,9 +169,6 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                combo_effect = 0.2
-                combo_time = Time + 1
-                combo_effect2 = 1.3
                 rate = "FAIL"
                 t1.remove(tile_data)
 
@@ -194,9 +179,6 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                combo_effect = 0.2
-                combo_time = Time + 1
-                combo_effect2 = 1.3
                 rate = "FAIL"
                 t2.remove(tile_data)
 
@@ -207,9 +189,6 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                combo_effect = 0.2
-                combo_time = Time + 1
-                combo_effect2 = 1.3
                 rate = "FAIL"
                 t3.remove(tile_data)
 
@@ -220,14 +199,13 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                combo_effect = 0.2
-                combo_time = Time + 1
-                combo_effect2 = 1.3
                 rate = "FAIL"
                 t4.remove(tile_data)
 
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2)) # visual judge line
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2), int(h/100))
+
+        screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
 
         pygame.display.flip()
         clock.tick(maxframe)
