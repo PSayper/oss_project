@@ -24,7 +24,7 @@ Time = time.time() - gst
 # options variable
 judgeline_pos = 0 # positive value sets judgement line lower, and vice versa
 keybomb_magnitude = 5 # max 7, set 1 or below to turn off keybombs
-note_speed = 1
+note_speed = 2
 
 if keybomb_magnitude > 7:
     keybomb_magnitude = 7
@@ -50,6 +50,7 @@ def deploy_note(n): # function for summoning note
 while main:
     while ingame:
 
+        Time = time.time() - gst
         fps = clock.get_fps() # set fps
         if fps == 0:
             fps = maxframe
@@ -64,10 +65,13 @@ while main:
                     deploy_note(1)
                 if event.key == pygame.K_d:
                     keyset[1] = 1
+                    deploy_note(2)
                 if event.key == pygame.K_l:
                     keyset[2] = 1
+                    deploy_note(3)
                 if event.key == pygame.K_SEMICOLON:
                     keyset[3] = 1
+                    deploy_note(4)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s:
                     keyset[0] = 0
@@ -97,22 +101,25 @@ while main:
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, -int(w/100), w/4, h+int(w/50)), int(w/100)) # gear line
 
         for tile_data in t1: # note placement
-            tile_data[0] = h/12*9 + (Time - tile_data[1])*350*note_speed*(h/900) # set note to take 2 seconds before falling
+            tile_data[0] = (h/12)*9 + (Time - tile_data[1]) * 350 * note_speed * (h/900) # set note to take 2 seconds before falling
             pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 t1.remove(tile_data)
+
         for tile_data in t2: 
-            tile_data[0] = h/12*9 + (Time - tile_data[1])*350*note_speed*(h/900)
+            tile_data[0] = (h/12)*9 + (Time - tile_data[1]) * 350 * note_speed * (h/900)
             pygame.draw.rect(screen, (255,255,255), (w/2 - w/16, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 t2.remove(tile_data)
+
         for tile_data in t3: 
-            tile_data[0] = h/12*9 + (Time - tile_data[1])*350*note_speed*(h/900)
+            tile_data[0] = (h/12)*9 + (Time - tile_data[1])*350*note_speed*(h/900)
             pygame.draw.rect(screen, (255,255,255), (w/2, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 t3.remove(tile_data)
+
         for tile_data in t4: 
-            tile_data[0] = h/12*9 + (Time - tile_data[1])*350*note_speed*(h/900)
+            tile_data[0] = (h/12)*9 + (Time - tile_data[1])*350*note_speed*(h/900)
             pygame.draw.rect(screen, (255,255,255), (w/2 + w/16, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 t4.remove(tile_data)
