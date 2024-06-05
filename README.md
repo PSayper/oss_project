@@ -14,7 +14,7 @@
 [2] https://youtu.be/GhoQwKBRxSg?si=2szb1icWphpQWvVn "파이썬으로 리듬게임을 만들어보자!"
 
 ## 실행 예시
-
+https://cdn.discordapp.com/attachments/945690809880154233/1247927532687462471/oss_silhaeng.gif?ex=6661ce95&is=66607d15&hm=5a32a53be65887b5d045d30c9fc529121accd92d8ea03b3dd83fc71bc883f176&
 
 ## 코드 설명
 ### main.py
