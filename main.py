@@ -37,6 +37,53 @@ note_deploy_time = 0
 notedeployer_1 = 0
 notedeployer_2 = 0
 
+last_combo = 0
+combo_effect = 0
+combo_effect2 = 0
+miss_anim = 0
+combo = 0
+combo_time = 0
+rate = 0
+
+judgement_data = [0,0,0,0]
+def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
+    global combo, miss_anim, last_combo, combo_effect, combo_effect2, combo_time, rate
+    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 200 * note_speed * (h/900)):
+        last_combo = combo
+        miss_anim = 1
+        combo = 0
+        combo_effect = 0.2
+        combo_time = Time + 1
+        combo_effect2 = 1.3
+        rate = "FAIL"
+    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 100 * note_speed * (h/900)):
+        last_combo = combo
+        miss_anim = 1
+        combo = 0
+        combo_effect = 0.2
+        combo_time = Time + 1
+        combo_effect2 = 1.3
+        rate = "MISS"
+    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 50 * note_speed * (h/900)):
+        combo += 1
+        combo_effect = 0.2
+        combo_time = Time + 1
+        combo_effect2 = 1.3
+        rate = "GOOD"
+    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 15 * note_speed * (h/900)):
+        combo += 1
+        combo_effect = 0.2
+        combo_time = Time + 1
+        combo_effect2 = 1.3
+        rate = "COOL"
+    if abs((h/12) * 9 - judgement_data[n-1] < 950 * note_speed * (h/900) and (h/12) * 9 - judgement_data[n-1] >= 0 * note_speed * (h/900)):
+        combo += 1
+        combo_effect = 0.2
+        combo_time = Time + 1
+        combo_effect2 = 1.3
+        rate = "KOOL"
+
+
 def deploy_note(n): # function for summoning note
     ty = 0
     tst = Time + 2
@@ -52,6 +99,15 @@ def deploy_note(n): # function for summoning note
 
 while main:
     while ingame:
+
+        if len(t1) > 0:
+            judgement_data[0] = t1[0][0]
+        if len(t2) > 0:
+            judgement_data[1] = t1[0][0]
+        if len(t3) > 0:
+            judgement_data[2] = t1[0][0]
+        if len(t4) > 0:
+            judgement_data[3] = t1[0][0]
 
         if Time > 0.2 * note_deploy_time: # randomly deploy note over tick
             note_deploy_time += 1
@@ -122,30 +178,56 @@ while main:
             tile_data[0] = (h/12)*9 + (Time - tile_data[1]) * 350 * note_speed * (h/900) # set note to take 2 seconds before falling
             pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
+                last_combo = combo
+                miss_anim = 1
+                combo = 0
+                combo_effect = 0.2
+                combo_time = Time + 1
+                combo_effect2 = 1.3
+                rate = "FAIL"
                 t1.remove(tile_data)
 
         for tile_data in t2: 
             tile_data[0] = (h/12)*9 + (Time - tile_data[1]) * 350 * note_speed * (h/900)
             pygame.draw.rect(screen, (255,255,255), (w/2 - w/16, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
+                last_combo = combo
+                miss_anim = 1
+                combo = 0
+                combo_effect = 0.2
+                combo_time = Time + 1
+                combo_effect2 = 1.3
+                rate = "FAIL"
                 t2.remove(tile_data)
 
         for tile_data in t3: 
             tile_data[0] = (h/12)*9 + (Time - tile_data[1])*350*note_speed*(h/900)
             pygame.draw.rect(screen, (255,255,255), (w/2, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
+                last_combo = combo
+                miss_anim = 1
+                combo = 0
+                combo_effect = 0.2
+                combo_time = Time + 1
+                combo_effect2 = 1.3
+                rate = "FAIL"
                 t3.remove(tile_data)
 
         for tile_data in t4: 
             tile_data[0] = (h/12)*9 + (Time - tile_data[1])*350*note_speed*(h/900)
             pygame.draw.rect(screen, (255,255,255), (w/2 + w/16, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
+                last_combo = combo
+                miss_anim = 1
+                combo = 0
+                combo_effect = 0.2
+                combo_time = Time + 1
+                combo_effect2 = 1.3
+                rate = "FAIL"
                 t4.remove(tile_data)
 
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2)) # visual judge line
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2), int(h/100))
 
-
-
         pygame.display.flip()
-
+        clock.tick(maxframe)
