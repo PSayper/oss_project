@@ -1,4 +1,4 @@
-import pygame, math, time, os
+import pygame, math, time, os, random
 
 # initializing pygame
 pygame.init()
@@ -33,6 +33,9 @@ t1 = []
 t2 = []
 t3 = []
 t4 = []
+note_deploy_time = 0
+notedeployer_1 = 0
+notedeployer_2 = 0
 
 def deploy_note(n): # function for summoning note
     ty = 0
@@ -50,6 +53,13 @@ def deploy_note(n): # function for summoning note
 while main:
     while ingame:
 
+        if Time > 0.2 * note_deploy_time: # randomly deploy note over tick
+            note_deploy_time += 1
+            while notedeployer_1 == notedeployer_2:
+                notedeployer_1 = random.randint(1,4)
+            deploy_note(notedeployer_1)
+            notedeployer_2 = notedeployer_1
+
         Time = time.time() - gst
         fps = clock.get_fps() # set fps
         if fps == 0:
@@ -62,16 +72,24 @@ while main:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s:
                     keyset[0] = 1
-                    deploy_note(1)
+                    if len(t1) > 0:
+                        if t1[0][0] > h/2:
+                            del t1[0]
                 if event.key == pygame.K_d:
                     keyset[1] = 1
-                    deploy_note(2)
+                    if len(t2) > 0:
+                        if t2[0][0] > h/2:
+                            del t2[0]
                 if event.key == pygame.K_l:
                     keyset[2] = 1
-                    deploy_note(3)
+                    if len(t3) > 0:
+                        if t3[0][0] > h/2:
+                            del t3[0]
                 if event.key == pygame.K_SEMICOLON:
                     keyset[3] = 1
-                    deploy_note(4)
+                    if len(t4) > 0:
+                        if t4[0][0] > h/2:
+                            del t4[0]
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s:
                     keyset[0] = 0
