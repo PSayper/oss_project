@@ -85,13 +85,13 @@ while main:
     while ingame:
 
         if len(t1) > 0:
-            judgement_data[0] = t1[0][0]
+            judgement_data[0] = t1[0][1]
         if len(t2) > 0:
-            judgement_data[1] = t2[0][0]
+            judgement_data[1] = t2[0][1]
         if len(t3) > 0:
-            judgement_data[2] = t3[0][0]
+            judgement_data[2] = t3[0][1]
         if len(t4) > 0:
-            judgement_data[3] = t4[0][0]
+            judgement_data[3] = t4[0][1]
 
         if Time > 0.2 * note_deploy_time: # randomly deploy note over tick
             note_deploy_time += 1
@@ -113,27 +113,31 @@ while main:
                 if event.key == pygame.K_s:
                     keyset[0] = 1
                     if len(t1) > 0:
-                        if t1[0][0] > h/2:
+                        if t1[0][0] > h/3:
+                            judge_note(1)
                             del t1[0]
-                    judge_note(1)
+                    
                 if event.key == pygame.K_d:
                     keyset[1] = 1
                     if len(t2) > 0:
-                        if t2[0][0] > h/2:
+                        if t2[0][0] > h/3:
+                            judge_note(2)
                             del t2[0]
-                    judge_note(2)
+                    
                 if event.key == pygame.K_l:
                     keyset[2] = 1
                     if len(t3) > 0:
-                        if t3[0][0] > h/2:
+                        if t3[0][0] > h/3:
+                            judge_note(3)
                             del t3[0]
-                    judge_note(3)
+                    
                 if event.key == pygame.K_SEMICOLON:
                     keyset[3] = 1
                     if len(t4) > 0:
-                        if t4[0][0] > h/2:
+                        if t4[0][0] > h/3:
+                            judge_note(4)
                             del t4[0]
-                    judge_note(4)
+                    
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s:
                     keyset[0] = 0
@@ -205,6 +209,7 @@ while main:
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2)) # visual judge line
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2), int(h/100))
 
+        rate_text = ingame_font.render(str(rate), False, (255,255,255))
         screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
 
         pygame.display.flip()
