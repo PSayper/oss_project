@@ -85,7 +85,7 @@ def deploy_note(n): # function for summoning note
 while main:
     while ingame:
 
-        pygame.display.set_caption("EZ2OSS : Combo" + str(combo))
+        pygame.display.set_caption("EZ2OSS")
         if len(t1) > 0:
             judgement_data[0] = t1[0][1]
         if len(t2) > 0:
@@ -213,6 +213,12 @@ while main:
 
         rate_text = ingame_font.render(str(rate), False, (255,255,255))
         screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
+        
+        combo_text = ingame_font.render("COMBO", False, (255,255,255))
+        screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*1 - combo_text.get_height()/2))
+        combo_text = ingame_font.render(str(combo), False, (255,255,255))
+        screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*2 - combo_text.get_height()/2))
+
 
         if combo >= 50:
             break
