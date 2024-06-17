@@ -4,18 +4,21 @@ import pygame, math, time, os, random
 pygame.init()
 pygame.mixer.init()
 
-w = 1600
+w = 1280
 h = w * (9/16)
 
 screen = pygame.display.set_mode((w, h))
 clock = pygame.time.Clock()
+
 pygame.display.set_caption("EZ2MAX OSS")
-pygame.key.set_repeat(200,100)
+
 image = pygame.image.load("Shining_light.png").convert()
 image = pygame.transform.scale(image, (w, h))
-pygame.mixer.music.load("Shining_light.wav")
-pygame.mixer.music.play(-1)
 
+pygame.mixer.music.load("Shining_light.wav")
+pygame.mixer.music.play(1)
+
+pygame.key.set_repeat(200,100)
 
 main = True
 ingame = True
@@ -55,7 +58,7 @@ middle_font = pygame.font.SysFont("arial", int(w/46), False, False)
 small_font = pygame.font.SysFont("arial", int(w/69), False, False)
 
 judgement_data = [0,0,0,0]
-def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
+def judge_note(n): # note judgement (BREAK, 1% ~ 100%)
     global combo, miss_anim, last_combo, rate, hp
     
     if abs(Time - judgement_data[n - 1]) < 0.5 and abs(Time - judgement_data[n - 1]) >= 0.18:
@@ -115,7 +118,7 @@ def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
 
 def deploy_note(n): # function for summoning note
     ty = 0
-    tst = Time + 2
+    tst = Time + 178/60
     if n == 1:
         t1.append([ty, tst])
     if n == 2:
@@ -128,6 +131,7 @@ def deploy_note(n): # function for summoning note
 
 while main:
     while ingame:
+        #배경 이미지 출력
         screen.blit(image, (0, 0))
 
         pygame.display.set_caption("EZ2MAX OSS")
@@ -140,29 +144,34 @@ while main:
         if len(t4) > 0:
             judgement_data[3] = t4[0][1]
 
-        if Time > 0.2 * note_deploy_time: # randomly deploy note over tick
+        if Time > 60/178 * note_deploy_time: # randomly deploy note over tick
             note_deploy_time += 1
-            while notedeployer_1 == notedeployer_2:
-                notedeployer_1 = random.randint(1,4)
+            notedeployer_1 = random.randint(1,4)
             deploy_note(notedeployer_1)
-            notedeployer_2 = notedeployer_1
 
         Time = time.time() - gst
-        fps = clock.get_fps() # set fps
+        fps = int(clock.get_fps()) # set fps
         if fps == 0:
             fps = maxframe
 
         for event in pygame.event.get():
-            # key input detection
+            #키 입력 감지
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
+                #ESC키 누르면 강제종료
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
+                #숫자키 1로 속도 감소, 2로 속도 증가
                 if event.key == pygame.K_1:
                     note_speed = round(note_speed - 0.1, 1)
+                    if(note_speed < 1.0):
+                        note_speed = 1.0
                 if event.key == pygame.K_2:
                     note_speed = round(note_speed + 0.1, 2)
+                    if(note_speed > 9.9):
+                        note_speed = 9.9
+                #s, d, l, ; 키로 노트 처리
                 if event.key == pygame.K_s:
                     keyset[0] = 1
                     if len(t1) > 0:
@@ -190,7 +199,7 @@ while main:
                         if(abs(Time - t4[0][1]) < 0.5):
                             judge_note(4)
                             del t4[0]
-                    
+            #키를 뗐을때 처리
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s:
                     keyset[0] = 0
@@ -216,6 +225,8 @@ while main:
         for i in range(1, keybomb_magnitude):
             pygame.draw.rect(screen, (200 - ((200/7)*i), 200 - ((200/7)*i), 200 - ((200/7)*i)), (w/2 + w/16 + w/32 - (w/32)*keys[3], (h/12)*9 - (h/30)*keys[3]*i, w/16*keys[3], (h/35)/i))
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, -int(w/100), w/4, h+int(w/50)), int(w/100)) # gear line
+        
+        #HP바 표시
         pygame.draw.rect(screen, (127,127,255), (w/2 - w/8 - w/64 - int(h/50), h*3/4 - h/2 - int(h/100), w/64 + int(h/50), h/2 + int(h/50)), int(h/100))
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8 - w/64 - int(h/100), h*3/4 - h/2, w/64, h/2))
         pygame.draw.rect(screen, (0,255,255), (w/2 - w/8 - w/64 - int(h/100), h*3/4 - h/2*hp/hp_max, w/64, h/2*hp/hp_max))
@@ -269,6 +280,7 @@ while main:
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2)) # visual judge line
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2), int(h/100))
 
+        #판정 표시
         if(rate == -1):
             rate_text = big_font.render("", False, (255,0,0))
         elif(rate == 0):
@@ -277,12 +289,13 @@ while main:
             rate_text = big_font.render("MAX "+str(rate)+"%", False, (55+rate*2,55+rate*2,255-rate*2))
         screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
         
+        #콤보 표시
         combo_text = big_font.render("COMBO", False, (255,255,0))
         screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*1 - combo_text.get_height()/2))
         combo_text = big_font.render(str(combo), False, (255,255,0))
         screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*2 - combo_text.get_height()/2))
 
-        
+        #속도 표시
         pygame.draw.rect(screen, (182, 44, 79), (w/2 - w/32, h - w/16 - w/64, w/16, w/16))
         pygame.draw.rect(screen, (206, 67, 102), (w/2 - w/32, h - w/16 - w/64, w/16, w/80))
         speed_text = small_font.render("SPEED", False, (255,255,255))
@@ -290,7 +303,12 @@ while main:
         speed_text = big_font.render(str(note_speed), False, (255,255,255))
         screen.blit(speed_text, (w/2 - speed_text.get_width()/2, h - w/16 - w/64 - speed_text.get_height()/2 + w/80 + w/40))
 
-        if(combo >= 50 or hp <= 0):
+        #FPS 표시
+        fps_text = middle_font.render("FPS: "+str(fps), False, (255, 255, 255))
+        screen.blit(fps_text, (w - fps_text.get_width(), 0))
+
+        #게임 종료 조건
+        if(Time >= 139 or HP <= 0):
             global end_time, clear
             end_time = Time
             ingame = False
@@ -298,18 +316,21 @@ while main:
                 clear = False
             else:
                 clear = True
-
+        
+        #화면 갱신
         pygame.display.flip()
         clock.tick(maxframe)
 
+    #성공 실패 여부 체크
     if(clear == True):
         clear_text = big_font.render("CONGRATULATIONS! YOU CLEARED THE GAME!", False, (0,255,0))
     else:
         clear_text = big_font.render("Game Over", False, (255,0,0))
     screen.blit(clear_text, (w/2 - clear_text.get_width()/2, (h/12)*6 - clear_text.get_height()/2))
+
     pygame.display.flip()
     clock.tick(maxframe)
+
     Time = time.time() - gst
     if(Time - end_time > 5):
         main = False
-
