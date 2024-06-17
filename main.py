@@ -165,17 +165,26 @@ while main:
             judgement_data[3] = t4[0][1]
 
         if Time > 60/178 * note_deploy_time: # randomly deploy note over tick
-            note_deploy_time += 1
+            #엇박 노트 발생기
+            if(int(note_deploy_time) != note_deploy_time):
+                note_deploy_time += 0.5
+            else:
+                rand = random.randint(1, 8)
+                if(rand == 4):
+                    note_deploy_time += 0.5
+                else:
+                    note_deploy_time += 1
+
             notedeployer_1 = random.randint(1,4)
+            deploy_note(notedeployer_1)
+
             #동치 노트 발생기
-            rand = random.randint(1, 4)
+            rand = random.randint(1, 6)
+            notedeployer_2 = notedeployer_1
             if(rand == 4):
                 while(notedeployer_1 == notedeployer_2):
-                    notedeployer_2 = random.randint(1, 4)
+                    notedeployer_2 = random.randint(1,4)
                 deploy_note(notedeployer_2)
-
-            deploy_note(notedeployer_1)
-            notedeployer_2 = notedeployer_1
 
         Time = time.time() - gst
         fps = int(clock.get_fps()) # set fps
