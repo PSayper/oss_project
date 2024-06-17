@@ -9,6 +9,7 @@ h = w * (9/16)
 screen = pygame.display.set_mode((w, h))
 clock = pygame.time.Clock()
 pygame.display.set_caption("EZ2MAX OSS")
+pygame.key.set_repeat(200,100)
 
 main = True
 ingame = True
@@ -149,6 +150,12 @@ while main:
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                if event.key == pygame.K_1:
+                    note_speed = round(note_speed - 0.1, 1)
+                if event.key == pygame.K_2:
+                    note_speed = round(note_speed + 0.1, 2)
                 if event.key == pygame.K_s:
                     keyset[0] = 1
                     if len(t1) > 0:
