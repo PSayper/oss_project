@@ -167,11 +167,13 @@ while main:
         if Time > 60/178 * note_deploy_time: # randomly deploy note over tick
             note_deploy_time += 1
             notedeployer_1 = random.randint(1,4)
+            #동치 노트 발생기
             rand = random.randint(1, 4)
             if(rand == 4):
                 while(notedeployer_1 == notedeployer_2):
                     notedeployer_2 = random.randint(1, 4)
                 deploy_note(notedeployer_2)
+
             deploy_note(notedeployer_1)
             notedeployer_2 = notedeployer_1
 
@@ -261,7 +263,7 @@ while main:
 
         for tile_data in t1: # note placement
             tile_data[0] = (h/12)*9 + (Time - tile_data[1]) * 350 * note_speed * (h/900) # set note to take 2 seconds before falling
-            pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, tile_data[0] - h/100, w/16, h/50))
+            pygame.draw.rect(screen, (255,192,0), (w/2 - w/8, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 last_combo = combo
                 miss += 1
@@ -274,7 +276,7 @@ while main:
 
         for tile_data in t2: 
             tile_data[0] = (h/12)*9 + (Time - tile_data[1]) * 350 * note_speed * (h/900)
-            pygame.draw.rect(screen, (255,255,255), (w/2 - w/16, tile_data[0] - h/100, w/16, h/50))
+            pygame.draw.rect(screen, (192,0,255), (w/2 - w/16, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 last_combo = combo
                 miss += 1
@@ -287,7 +289,7 @@ while main:
 
         for tile_data in t3: 
             tile_data[0] = (h/12)*9 + (Time - tile_data[1])*350*note_speed*(h/900)
-            pygame.draw.rect(screen, (255,255,255), (w/2, tile_data[0] - h/100, w/16, h/50))
+            pygame.draw.rect(screen, (192,0,255), (w/2, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 last_combo = combo
                 miss += 1
@@ -300,7 +302,7 @@ while main:
 
         for tile_data in t4: 
             tile_data[0] = (h/12)*9 + (Time - tile_data[1])*350*note_speed*(h/900)
-            pygame.draw.rect(screen, (255,255,255), (w/2 + w/16, tile_data[0] - h/100, w/16, h/50))
+            pygame.draw.rect(screen, (255,192,0), (w/2 + w/16, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 last_combo = combo
                 miss += 1
