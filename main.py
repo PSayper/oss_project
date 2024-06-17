@@ -39,7 +39,7 @@ notedeployer_2 = 0
 
 miss_anim = 0
 combo = 0
-hp_max = 130
+hp_max = 1300
 hp = hp_max
 rate = ""
 
@@ -50,30 +50,56 @@ judgement_data = [0,0,0,0]
 def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
     global combo, miss_anim, last_combo, rate, hp
     
-    if abs(Time - judgement_data[n - 1]) < 2 and abs(Time - judgement_data[n - 1]) >= 1:
+    if abs(Time - judgement_data[n - 1]) < 0.5 and abs(Time - judgement_data[n - 1]) >= 0.18:
         last_combo = combo
         miss_anim = 1
         combo = 0
-        rate = "FAIL"
-        hp -= 10
-    if abs(Time - judgement_data[n - 1]) < 1 and abs(Time - judgement_data[n - 1]) >= 0.35:
-        last_combo = combo
-        miss_anim = 1
-        combo = 0
-        rate = "MISS"
-        hp -= 10
-    if abs(Time - judgement_data[n - 1]) < 0.35 and abs(Time - judgement_data[n - 1]) >= 0.07:
+        rate = "BREAK"
+        hp -= 100
+    if abs(Time - judgement_data[n - 1]) <= 0.18 and abs(Time - judgement_data[n - 1]) > 0.168:
         combo += 1
-        rate = "GOOD"
+        rate = "MAX 1%"
+        hp += 0
+    if abs(Time - judgement_data[n - 1]) <= 0.168 and abs(Time - judgement_data[n - 1]) > 0.159:
+        combo += 1
+        rate = "MAX 10%"
         hp += 1
-    if abs(Time - judgement_data[n - 1]) < 0.07 and abs(Time - judgement_data[n - 1]) >= 0.035:
+    if abs(Time - judgement_data[n - 1]) <= 0.159 and abs(Time - judgement_data[n - 1]) > 0.147:
         combo += 1
-        rate = "COOL"
+        rate = "MAX 20%"
         hp += 2
-    if abs(Time - judgement_data[n - 1]) < 0.035 and abs(Time - judgement_data[n - 1]) >= 0:
+    if abs(Time - judgement_data[n - 1]) <= 0.147 and abs(Time - judgement_data[n - 1]) > 0.138:
         combo += 1
-        rate = "KOOL"
+        rate = "MAX 30%"
         hp += 3
+    if abs(Time - judgement_data[n - 1]) <= 0.138 and abs(Time - judgement_data[n - 1]) > 0.129:
+        combo += 1
+        rate = "MAX 40%"
+        hp += 4
+    if abs(Time - judgement_data[n - 1]) <= 0.129 and abs(Time - judgement_data[n - 1]) > 0.12:
+        combo += 1
+        rate = "MAX 50%"
+        hp += 5
+    if abs(Time - judgement_data[n - 1]) <= 0.12 and abs(Time - judgement_data[n - 1]) > 0.099:
+        combo += 1
+        rate = "MAX 60%"
+        hp += 6
+    if abs(Time - judgement_data[n - 1]) <= 0.099 and abs(Time - judgement_data[n - 1]) > 0.078:
+        combo += 1
+        rate = "MAX 70%"
+        hp += 7
+    if abs(Time - judgement_data[n - 1]) <= 0.078 and abs(Time - judgement_data[n - 1]) > 0.06:
+        combo += 1
+        rate = "MAX 80%"
+        hp += 8
+    if abs(Time - judgement_data[n - 1]) <= 0.06 and abs(Time - judgement_data[n - 1]) > 0.042:
+        combo += 1
+        rate = "MAX 90%"
+        hp += 9
+    if abs(Time - judgement_data[n - 1]) <= 0.042 and abs(Time - judgement_data[n - 1]) >= 0:
+        combo += 1
+        rate = "MAX 100%"
+        hp += 10
 
     if(hp > hp_max):
         hp = hp_max
@@ -125,28 +151,28 @@ while main:
                 if event.key == pygame.K_s:
                     keyset[0] = 1
                     if len(t1) > 0:
-                        if t1[0][0] > h/3:
+                        if(abs(Time - t1[0][1]) < 0.5):
                             judge_note(1)
                             del t1[0]
                     
                 if event.key == pygame.K_d:
                     keyset[1] = 1
                     if len(t2) > 0:
-                        if t2[0][0] > h/3:
+                        if(abs(Time - t2[0][1]) < 0.5):
                             judge_note(2)
                             del t2[0]
                     
                 if event.key == pygame.K_l:
                     keyset[2] = 1
                     if len(t3) > 0:
-                        if t3[0][0] > h/3:
+                        if(abs(Time - t3[0][1]) < 0.5):
                             judge_note(3)
                             del t3[0]
                     
                 if event.key == pygame.K_SEMICOLON:
                     keyset[3] = 1
                     if len(t4) > 0:
-                        if t4[0][0] > h/3:
+                        if(abs(Time - t4[0][1]) < 0.5):
                             judge_note(4)
                             del t4[0]
                     
@@ -189,8 +215,8 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                rate = "FAIL"
-                hp -= 10
+                rate = "BREAK"
+                hp -= 100
                 t1.remove(tile_data)
 
         for tile_data in t2: 
@@ -200,8 +226,8 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                rate = "FAIL"
-                hp -= 10
+                rate = "BREAK"
+                hp -= 100
                 t2.remove(tile_data)
 
         for tile_data in t3: 
@@ -211,8 +237,8 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                rate = "FAIL"
-                hp -= 10
+                rate = "BREAK"
+                hp -= 100
                 t3.remove(tile_data)
 
         for tile_data in t4: 
@@ -222,8 +248,8 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                rate = "FAIL"
-                hp -= 10
+                rate = "BREAK"
+                hp -= 100
                 t4.remove(tile_data)
 
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2)) # visual judge line
