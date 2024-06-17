@@ -10,14 +10,23 @@ h = w * (9/16)
 screen = pygame.display.set_mode((w, h))
 clock = pygame.time.Clock()
 
-pygame.display.set_caption("EZ2MAX OSS")
+pygame.display.set_caption("Loading...")
 
 image = pygame.image.load("Shining_light.png").convert()
 image = pygame.transform.scale(image, (w, h))
-image_mxcombo = pygame.image.load("Max_combo.png").convert_alpha()
-image_mxcombo = pygame.transform.scale(image_mxcombo, (w/6, w/6*658/613))
-image_perfect = pygame.image.load("Perfect.png").convert_alpha()
-image_perfect = pygame.transform.scale(image_perfect, (w/6, w/6*701/604))
+gif_mx = []
+for filename in sorted(os.listdir("Max_combo"), key=lambda x: int(x.replace("frame", "").replace(".png", ""))):
+    frame_image = pygame.image.load(os.path.join("Max_combo", filename)).convert()
+    frame_image = pygame.transform.scale(frame_image, (w/4 - int(w/50), w/4 - int(w/50)))
+    gif_mx.append(frame_image)
+
+gif_pf = []
+for filename in sorted(os.listdir("Perfect"), key=lambda x: int(x.replace("frame", "").replace(".png", ""))):
+    frame_image = pygame.image.load(os.path.join("Perfect", filename)).convert()
+    frame_image = pygame.transform.scale(frame_image, (w/4 - int(w/50), w/4 - int(w/50)))
+    gif_pf.append(frame_image)
+
+frame_index = 0
 
 pygame.mixer.music.load("Shining_light.wav")
 pygame.mixer.music.play(1)
@@ -356,19 +365,21 @@ while main:
     if(clear == True):
         #풀콤보, 퍼펙트 여부 체크
         if(average == 100):
-            screen.blit(image_perfect, (w/2 - image_perfect.get_width()/2, h/3 - image_perfect.get_height()/2))
+            screen.blit(gif_pf[frame_index], (w/2 - gif_pf[frame_index].get_width()/2, h/3 - gif_pf[frame_index].get_height()/2))
         elif(miss == 0):
-            screen.blit(image_mxcombo, (w/2 - image_mxcombo.get_width()/2, h/3 - image_mxcombo.get_height()/2))
+            screen.blit(gif_mx[frame_index], (w/2 - gif_mx[frame_index].get_width()/2, h/3 - gif_mx[frame_index].get_height()/2))
         else:
             clear_text = big_font.render("CLEAR!", False, (0,255,0))
             screen.blit(clear_text, (w/2 - clear_text.get_width()/2, h/3 - clear_text.get_height()/2))
     else:
         clear_text = big_font.render("Game Over", False, (255,0,0))
         screen.blit(clear_text, (w/2 - clear_text.get_width()/2, h/3 - clear_text.get_height()/2))
+    frame_index += 1
 
     pygame.display.flip()
-    clock.tick(maxframe)
+    clock.tick(33)
 
     Time = time.time() - gst
     if(Time - end_time > 5):
         main = False
+        pygame.quit()
