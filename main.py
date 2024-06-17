@@ -43,8 +43,9 @@ hp_max = 1300
 hp = hp_max
 rate = -1
 
-ingame_font = pygame.font.SysFont("arial", int(w/23), False, True)
-rate_text = ingame_font.render(str(rate), False, (255,255,255))
+big_font = pygame.font.SysFont("arial", int(w/23), False, False)
+middle_font = pygame.font.SysFont("arial", int(w/46), False, False)
+small_font = pygame.font.SysFont("arial", int(w/69), False, False)
 
 judgement_data = [0,0,0,0]
 def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
@@ -205,7 +206,7 @@ while main:
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, -int(w/100), w/4, h+int(w/50)), int(w/100)) # gear line
         pygame.draw.rect(screen, (127,127,255), (w/2 - w/8 - w/64 - int(h/50), h*3/4 - h/2 - int(h/100), w/64 + int(h/50), h/2 + int(h/50)), int(h/100))
         pygame.draw.rect(screen, (0,255,255), (w/2 - w/8 - w/64 - int(h/100), h*3/4 - h/2*hp/hp_max, w/64, h/2*hp/hp_max))
-        hp_text = ingame_font.render("HP", False, (255,127,127))
+        hp_text = middle_font.render("HP", False, (255,127,127))
         screen.blit(hp_text, (w/2 - w/8 - w/64 - int(h/100) + w/128 - hp_text.get_width()/2, h*3/4 - h/2 - h/32 - hp_text.get_height()/2))
 
         for tile_data in t1: # note placement
@@ -256,16 +257,16 @@ while main:
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2), int(h/100))
 
         if(rate == -1):
-            rate_text = ingame_font.render("", False, (255,0,0))
+            rate_text = big_font.render("", False, (255,0,0))
         elif(rate == 0):
-            rate_text = ingame_font.render("BREAK", False, (255,0,0))
+            rate_text = big_font.render("BREAK", False, (255,0,0))
         else:
-            rate_text = ingame_font.render("MAX "+str(rate)+"%", False, (55+rate*2,55+rate*2,255-rate*2))
+            rate_text = big_font.render("MAX "+str(rate)+"%", False, (55+rate*2,55+rate*2,255-rate*2))
         screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
         
-        combo_text = ingame_font.render("COMBO", False, (255,255,0))
+        combo_text = big_font.render("COMBO", False, (255,255,0))
         screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*1 - combo_text.get_height()/2))
-        combo_text = ingame_font.render(str(combo), False, (255,255,0))
+        combo_text = big_font.render(str(combo), False, (255,255,0))
         screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*2 - combo_text.get_height()/2))
 
 
@@ -282,9 +283,9 @@ while main:
         clock.tick(maxframe)
 
     if(clear == True):
-        clear_text = ingame_font.render("CONGRATULATIONS! YOU CLEARED THE GAME!", False, (0,255,0))
+        clear_text = big_font.render("CONGRATULATIONS! YOU CLEARED THE GAME!", False, (0,255,0))
     else:
-        clear_text = ingame_font.render("Game Over", False, (255,0,0))
+        clear_text = big_font.render("Game Over", False, (255,0,0))
     screen.blit(clear_text, (w/2 - clear_text.get_width()/2, (h/12)*6 - clear_text.get_height()/2))
     pygame.display.flip()
     clock.tick(maxframe)
