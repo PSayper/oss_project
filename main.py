@@ -10,6 +10,8 @@ screen = pygame.display.set_mode((w, h))
 clock = pygame.time.Clock()
 pygame.display.set_caption("EZ2MAX OSS")
 pygame.key.set_repeat(200,100)
+image = pygame.image.load("Shining_light.png").convert()
+image = pygame.transform.scale(image, (w, h))
 
 main = True
 ingame = True
@@ -122,6 +124,7 @@ def deploy_note(n): # function for summoning note
 
 while main:
     while ingame:
+        screen.blit(image, (0, 0))
 
         pygame.display.set_caption("EZ2MAX OSS")
         if len(t1) > 0:
@@ -194,8 +197,6 @@ while main:
                 if event.key == pygame.K_SEMICOLON:
                     keyset[3] = 0
 
-        screen.fill((0,0,0)) 
-
         keys[0] += (keyset[0] - keys[0]) / (2*(maxframe/fps)) # scroll speed management depending on fps
         keys[1] += (keyset[1] - keys[1]) / (2*(maxframe/fps))
         keys[2] += (keyset[2] - keys[2]) / (2*(maxframe/fps))
@@ -212,6 +213,7 @@ while main:
             pygame.draw.rect(screen, (200 - ((200/7)*i), 200 - ((200/7)*i), 200 - ((200/7)*i)), (w/2 + w/16 + w/32 - (w/32)*keys[3], (h/12)*9 - (h/30)*keys[3]*i, w/16*keys[3], (h/35)/i))
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, -int(w/100), w/4, h+int(w/50)), int(w/100)) # gear line
         pygame.draw.rect(screen, (127,127,255), (w/2 - w/8 - w/64 - int(h/50), h*3/4 - h/2 - int(h/100), w/64 + int(h/50), h/2 + int(h/50)), int(h/100))
+        pygame.draw.rect(screen, (0,0,0), (w/2 - w/8 - w/64 - int(h/100), h*3/4 - h/2, w/64, h/2))
         pygame.draw.rect(screen, (0,255,255), (w/2 - w/8 - w/64 - int(h/100), h*3/4 - h/2*hp/hp_max, w/64, h/2*hp/hp_max))
         hp_text = middle_font.render("HP", False, (255,127,127))
         screen.blit(hp_text, (w/2 - w/8 - w/64 - int(h/100) + w/128 - hp_text.get_width()/2, h*3/4 - h/2 - h/32 - hp_text.get_height()/2))
