@@ -14,6 +14,10 @@ pygame.display.set_caption("EZ2MAX OSS")
 
 image = pygame.image.load("Shining_light.png").convert()
 image = pygame.transform.scale(image, (w, h))
+image_mxcombo = pygame.image.load("Max_combo.png").convert_alpha()
+image_mxcombo = pygame.transform.scale(image_mxcombo, (w/6, w/6*658/613))
+image_perfect = pygame.image.load("Perfect.png").convert_alpha()
+image_perfect = pygame.transform.scale(image_perfect, (w/6, w/6*701/604))
 
 pygame.mixer.music.load("Shining_light.wav")
 pygame.mixer.music.play(1)
@@ -244,7 +248,7 @@ while main:
             pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 last_combo = combo
-                miss_anim = 1
+                miss += 1
                 combo = 0
                 rate = 0
                 hp -= 100
@@ -257,7 +261,7 @@ while main:
             pygame.draw.rect(screen, (255,255,255), (w/2 - w/16, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 last_combo = combo
-                miss_anim = 1
+                miss += 1
                 combo = 0
                 rate = 0
                 hp -= 100
@@ -270,7 +274,7 @@ while main:
             pygame.draw.rect(screen, (255,255,255), (w/2, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 last_combo = combo
-                miss_anim = 1
+                miss += 1
                 combo = 0
                 rate = 0
                 hp -= 100
@@ -283,7 +287,7 @@ while main:
             pygame.draw.rect(screen, (255,255,255), (w/2 + w/16, tile_data[0] - h/100, w/16, h/50))
             if tile_data[0] > h - (h/9):
                 last_combo = combo
-                miss_anim = 1
+                miss += 1
                 combo = 0
                 rate = 0
                 hp -= 100
@@ -345,10 +349,17 @@ while main:
 
     #성공 실패 여부 체크
     if(clear == True):
-        clear_text = big_font.render("CONGRATULATIONS! YOU CLEARED THE GAME!", False, (0,255,0))
+        #풀콤보, 퍼펙트 여부 체크
+        if(average == 100):
+            screen.blit(image_perfect, (w/2 - image_perfect.get_width()/2, h/3 - image_perfect.get_height()/2))
+        elif(miss == 0):
+            screen.blit(image_mxcombo, (w/2 - image_mxcombo.get_width()/2, h/3 - image_mxcombo.get_height()/2))
+        else:
+            clear_text = big_font.render("CLEAR!", False, (0,255,0))
+            screen.blit(clear_text, (w/2 - clear_text.get_width()/2, h/3 - clear_text.get_height()/2))
     else:
         clear_text = big_font.render("Game Over", False, (255,0,0))
-    screen.blit(clear_text, (w/2 - clear_text.get_width()/2, (h/12)*6 - clear_text.get_height()/2))
+        screen.blit(clear_text, (w/2 - clear_text.get_width()/2, h/3 - clear_text.get_height()/2))
 
     pygame.display.flip()
     clock.tick(maxframe)
