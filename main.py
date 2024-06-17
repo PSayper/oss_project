@@ -2,6 +2,7 @@ import pygame, math, time, os, random
 
 # initializing pygame
 pygame.init()
+pygame.mixer.init()
 
 w = 1600
 h = w * (9/16)
@@ -12,6 +13,9 @@ pygame.display.set_caption("EZ2MAX OSS")
 pygame.key.set_repeat(200,100)
 image = pygame.image.load("Shining_light.png").convert()
 image = pygame.transform.scale(image, (w, h))
+pygame.mixer.music.load("Shining_light.wav")
+pygame.mixer.music.play(-1)
+
 
 main = True
 ingame = True
