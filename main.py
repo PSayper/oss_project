@@ -26,6 +26,7 @@ pygame.key.set_repeat(200,100)
 
 main = True
 ingame = True
+ingame_real = True
 
 keys = [0,0,0,0]
 keyset = [0,0,0,0]
@@ -38,7 +39,7 @@ Time = time.time() - gst
 # options variable
 judgeline_pos = 0 # positive value sets judgement line lower, and vice versa
 keybomb_magnitude = 5 # max 7, set 1 or below to turn off keybombs
-note_speed = 2.0
+note_speed = 3.0
 
 if keybomb_magnitude > 7:
     keybomb_magnitude = 7
@@ -299,19 +300,21 @@ while main:
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2), int(h/100))
 
         #판정 표시
-        if(rate == -1):
-            rate_text = big_font.render("", False, (255,0,0))
-        elif(rate == 0):
-            rate_text = big_font.render("BREAK", False, (255,0,0))
-        else:
-            rate_text = big_font.render("MAX "+str(rate)+"%", False, (55+rate*2,55+rate*2,255-rate*2))
-        screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
+        if ingame_real:
+            if(rate == -1):
+                rate_text = big_font.render("", False, (255,0,0))
+            elif(rate == 0):
+                rate_text = big_font.render("BREAK", False, (255,0,0))
+            else:
+                rate_text = big_font.render("MAX "+str(rate)+"%", False, (55+rate*2,55+rate*2,255-rate*2))
+            screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
         
         #콤보 표시
-        combo_text = big_font.render("COMBO", False, (255,255,0))
-        screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*1 - combo_text.get_height()/2))
-        combo_text = big_font.render(str(combo), False, (255,255,0))
-        screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*2 - combo_text.get_height()/2))
+        if ingame_real:
+            combo_text = big_font.render("COMBO", False, (255,255,0))
+            screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*1 - combo_text.get_height()/2))
+            combo_text = big_font.render(str(combo), False, (255,255,0))
+            screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*2 - combo_text.get_height()/2))
 
         #속도 표시
         pygame.draw.rect(screen, (182, 44, 79), (w/2 - w/32, h - w/16 - w/64, w/16, w/16))
@@ -333,11 +336,13 @@ while main:
         average_text = small_font.render("RATE {:.2f}%".format(average), False, (255,255,255))
         screen.blit(average_text, (w/2 - average_text.get_width()/2, (h/12)*7 - average_text.get_height()/2))
 
+        global end_time, clear
         #게임 종료 조건
-        if(Time >= 139 or hp <= 0):
-            global end_time, clear
-            end_time = Time
+        if(ingame_real == False):
             ingame = False
+        elif(Time >= 139 or hp <= 0):
+            end_time = Time
+            ingame_real = False
             if(hp <= 0):
                 clear = False
             else:
