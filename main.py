@@ -39,6 +39,8 @@ notedeployer_2 = 0
 
 miss_anim = 0
 combo = 0
+hp_max = 130
+hp = hp_max
 rate = ""
 
 ingame_font = pygame.font.SysFont("arial", int(w/23), False, True)
@@ -46,27 +48,35 @@ rate_text = ingame_font.render(str(rate), False, (255,255,255))
 
 judgement_data = [0,0,0,0]
 def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
-    global combo, miss_anim, last_combo, rate
+    global combo, miss_anim, last_combo, rate, hp
     
     if abs(Time - judgement_data[n - 1]) < 2 and abs(Time - judgement_data[n - 1]) >= 1:
         last_combo = combo
         miss_anim = 1
         combo = 0
         rate = "FAIL"
+        hp -= 10
     if abs(Time - judgement_data[n - 1]) < 1 and abs(Time - judgement_data[n - 1]) >= 0.35:
         last_combo = combo
         miss_anim = 1
         combo = 0
         rate = "MISS"
+        hp -= 10
     if abs(Time - judgement_data[n - 1]) < 0.35 and abs(Time - judgement_data[n - 1]) >= 0.07:
         combo += 1
         rate = "GOOD"
+        hp += 1
     if abs(Time - judgement_data[n - 1]) < 0.07 and abs(Time - judgement_data[n - 1]) >= 0.035:
         combo += 1
         rate = "COOL"
+        hp += 2
     if abs(Time - judgement_data[n - 1]) < 0.035 and abs(Time - judgement_data[n - 1]) >= 0:
         combo += 1
         rate = "KOOL"
+        hp += 3
+
+    if(hp > hp_max):
+        hp = hp_max
 
 
 def deploy_note(n): # function for summoning note
@@ -167,6 +177,10 @@ while main:
         for i in range(1, keybomb_magnitude):
             pygame.draw.rect(screen, (200 - ((200/7)*i), 200 - ((200/7)*i), 200 - ((200/7)*i)), (w/2 + w/16 + w/32 - (w/32)*keys[3], (h/12)*9 - (h/30)*keys[3]*i, w/16*keys[3], (h/35)/i))
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, -int(w/100), w/4, h+int(w/50)), int(w/100)) # gear line
+        pygame.draw.rect(screen, (127,127,255), (w/2 - w/8 - w/64 - int(h/50), h*3/4 - h/2 - int(h/100), w/64 + int(h/50), h/2 + int(h/50)), int(h/100))
+        pygame.draw.rect(screen, (0,255,255), (w/2 - w/8 - w/64 - int(h/100), h*3/4 - h/2*hp/hp_max, w/64, h/2*hp/hp_max))
+        hp_text = ingame_font.render("HP", False, (255,127,127))
+        screen.blit(hp_text, (w/2 - w/8 - w/64 - int(h/100) + w/128 - hp_text.get_width()/2, h*3/4 - h/2 - h/32 - hp_text.get_height()/2))
 
         for tile_data in t1: # note placement
             tile_data[0] = (h/12)*9 + (Time - tile_data[1]) * 350 * note_speed * (h/900) # set note to take 2 seconds before falling
@@ -176,6 +190,7 @@ while main:
                 miss_anim = 1
                 combo = 0
                 rate = "FAIL"
+                hp -= 10
                 t1.remove(tile_data)
 
         for tile_data in t2: 
@@ -186,6 +201,7 @@ while main:
                 miss_anim = 1
                 combo = 0
                 rate = "FAIL"
+                hp -= 10
                 t2.remove(tile_data)
 
         for tile_data in t3: 
@@ -196,6 +212,7 @@ while main:
                 miss_anim = 1
                 combo = 0
                 rate = "FAIL"
+                hp -= 10
                 t3.remove(tile_data)
 
         for tile_data in t4: 
@@ -206,6 +223,7 @@ while main:
                 miss_anim = 1
                 combo = 0
                 rate = "FAIL"
+                hp -= 10
                 t4.remove(tile_data)
 
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2)) # visual judge line
@@ -220,16 +238,22 @@ while main:
         screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*2 - combo_text.get_height()/2))
 
 
-        if combo >= 50:
-            global end_time
+        if(combo >= 50 or hp <= 0):
+            global end_time, clear
             end_time = Time
             ingame = False
+            if(hp <= 0):
+                clear = False
+            else:
+                clear = True
 
         pygame.display.flip()
         clock.tick(maxframe)
 
-    clear = "CONGRATULATIONS! YOU CLEARED THE GAME!"
-    clear_text = ingame_font.render(str(clear), False, (0,255,0))
+    if(clear == True):
+        clear_text = ingame_font.render("CONGRATULATIONS! YOU CLEARED THE GAME!", False, (0,255,0))
+    else:
+        clear_text = ingame_font.render("Game Over", False, (255,0,0))
     screen.blit(clear_text, (w/2 - clear_text.get_width()/2, (h/12)*6 - clear_text.get_height()/2))
     pygame.display.flip()
     clock.tick(maxframe)
