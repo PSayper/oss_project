@@ -24,7 +24,7 @@ Time = time.time() - gst
 # options variable
 judgeline_pos = 0 # positive value sets judgement line lower, and vice versa
 keybomb_magnitude = 5 # max 7, set 1 or below to turn off keybombs
-note_speed = 2
+note_speed = 2.0
 
 if keybomb_magnitude > 7:
     keybomb_magnitude = 7
@@ -269,6 +269,13 @@ while main:
         combo_text = big_font.render(str(combo), False, (255,255,0))
         screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*2 - combo_text.get_height()/2))
 
+        
+        pygame.draw.rect(screen, (182, 44, 79), (w/2 - w/32, h - w/16 - w/64, w/16, w/16))
+        pygame.draw.rect(screen, (206, 67, 102), (w/2 - w/32, h - w/16 - w/64, w/16, w/80))
+        speed_text = small_font.render("SPEED", False, (255,255,255))
+        screen.blit(speed_text, (w/2 - speed_text.get_width()/2, h - w/16 - w/64 - speed_text.get_height()/2 + w/160))
+        speed_text = big_font.render(str(note_speed), False, (255,255,255))
+        screen.blit(speed_text, (w/2 - speed_text.get_width()/2, h - w/16 - w/64 - speed_text.get_height()/2 + w/80 + w/40))
 
         if(combo >= 50 or hp <= 0):
             global end_time, clear
