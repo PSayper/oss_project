@@ -8,7 +8,7 @@ h = w * (9/16)
 
 screen = pygame.display.set_mode((w, h))
 clock = pygame.time.Clock()
-pygame.display.set_caption("EZ2OSS")
+pygame.display.set_caption("EZ2MAX OSS")
 
 main = True
 ingame = True
@@ -41,7 +41,7 @@ miss_anim = 0
 combo = 0
 hp_max = 1300
 hp = hp_max
-rate = ""
+rate = -1
 
 ingame_font = pygame.font.SysFont("arial", int(w/23), False, True)
 rate_text = ingame_font.render(str(rate), False, (255,255,255))
@@ -54,51 +54,51 @@ def judge_note(n): # note judgement (KOOL, COOL, GOOD, MISS, FAIL)
         last_combo = combo
         miss_anim = 1
         combo = 0
-        rate = "BREAK"
+        rate = 0
         hp -= 100
     if abs(Time - judgement_data[n - 1]) <= 0.18 and abs(Time - judgement_data[n - 1]) > 0.168:
         combo += 1
-        rate = "MAX 1%"
+        rate = 1
         hp += 0
     if abs(Time - judgement_data[n - 1]) <= 0.168 and abs(Time - judgement_data[n - 1]) > 0.159:
         combo += 1
-        rate = "MAX 10%"
+        rate = 10
         hp += 1
     if abs(Time - judgement_data[n - 1]) <= 0.159 and abs(Time - judgement_data[n - 1]) > 0.147:
         combo += 1
-        rate = "MAX 20%"
+        rate = 20
         hp += 2
     if abs(Time - judgement_data[n - 1]) <= 0.147 and abs(Time - judgement_data[n - 1]) > 0.138:
         combo += 1
-        rate = "MAX 30%"
+        rate = 30
         hp += 3
     if abs(Time - judgement_data[n - 1]) <= 0.138 and abs(Time - judgement_data[n - 1]) > 0.129:
         combo += 1
-        rate = "MAX 40%"
+        rate = 40
         hp += 4
     if abs(Time - judgement_data[n - 1]) <= 0.129 and abs(Time - judgement_data[n - 1]) > 0.12:
         combo += 1
-        rate = "MAX 50%"
+        rate = 50
         hp += 5
     if abs(Time - judgement_data[n - 1]) <= 0.12 and abs(Time - judgement_data[n - 1]) > 0.099:
         combo += 1
-        rate = "MAX 60%"
+        rate = 60
         hp += 6
     if abs(Time - judgement_data[n - 1]) <= 0.099 and abs(Time - judgement_data[n - 1]) > 0.078:
         combo += 1
-        rate = "MAX 70%"
+        rate = 70
         hp += 7
     if abs(Time - judgement_data[n - 1]) <= 0.078 and abs(Time - judgement_data[n - 1]) > 0.06:
         combo += 1
-        rate = "MAX 80%"
+        rate = 80
         hp += 8
     if abs(Time - judgement_data[n - 1]) <= 0.06 and abs(Time - judgement_data[n - 1]) > 0.042:
         combo += 1
-        rate = "MAX 90%"
+        rate = 90
         hp += 9
     if abs(Time - judgement_data[n - 1]) <= 0.042 and abs(Time - judgement_data[n - 1]) >= 0:
         combo += 1
-        rate = "MAX 100%"
+        rate = 100
         hp += 10
 
     if(hp > hp_max):
@@ -121,7 +121,7 @@ def deploy_note(n): # function for summoning note
 while main:
     while ingame:
 
-        pygame.display.set_caption("EZ2OSS")
+        pygame.display.set_caption("EZ2MAX OSS")
         if len(t1) > 0:
             judgement_data[0] = t1[0][1]
         if len(t2) > 0:
@@ -215,7 +215,7 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                rate = "BREAK"
+                rate = 0
                 hp -= 100
                 t1.remove(tile_data)
 
@@ -226,7 +226,7 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                rate = "BREAK"
+                rate = 0
                 hp -= 100
                 t2.remove(tile_data)
 
@@ -237,7 +237,7 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                rate = "BREAK"
+                rate = 0
                 hp -= 100
                 t3.remove(tile_data)
 
@@ -248,14 +248,19 @@ while main:
                 last_combo = combo
                 miss_anim = 1
                 combo = 0
-                rate = "BREAK"
+                rate = 0
                 hp -= 100
                 t4.remove(tile_data)
 
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2)) # visual judge line
         pygame.draw.rect(screen, (255,255,255), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2), int(h/100))
 
-        rate_text = ingame_font.render(str(rate), False, (255,255,255))
+        if(rate == -1):
+            rate_text = ingame_font.render("", False, (255,0,0))
+        elif(rate == 0):
+            rate_text = ingame_font.render("BREAK", False, (255,0,0))
+        else:
+            rate_text = ingame_font.render("MAX "+str(rate)+"%", False, (55+rate*2,55+rate*2,255-rate*2))
         screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
         
         combo_text = ingame_font.render("COMBO", False, (255,255,0))
