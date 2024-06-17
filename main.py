@@ -214,21 +214,26 @@ while main:
         rate_text = ingame_font.render(str(rate), False, (255,255,255))
         screen.blit(rate_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - rate_text.get_height()/2))
         
-        combo_text = ingame_font.render("COMBO", False, (255,255,255))
+        combo_text = ingame_font.render("COMBO", False, (255,255,0))
         screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*1 - combo_text.get_height()/2))
-        combo_text = ingame_font.render(str(combo), False, (255,255,255))
+        combo_text = ingame_font.render(str(combo), False, (255,255,0))
         screen.blit(combo_text, (w/2 - combo_text.get_width()/2, (h/12)*2 - combo_text.get_height()/2))
 
 
         if combo >= 50:
-            break
+            global end_time
+            end_time = Time
+            ingame = False
 
         pygame.display.flip()
         clock.tick(maxframe)
 
-    break
+    clear = "CONGRATULATIONS! YOU CLEARED THE GAME!"
+    clear_text = ingame_font.render(str(clear), False, (0,255,0))
+    screen.blit(clear_text, (w/2 - clear_text.get_width()/2, (h/12)*6 - clear_text.get_height()/2))
+    pygame.display.flip()
+    clock.tick(maxframe)
+    Time = time.time() - gst
+    if(Time - end_time > 5):
+        main = False
 
-clear = "CONGRATULATIONS! YOU CLEARED THE GAME!"
-clear_text = ingame_font.render(str(clear), False, (255,255,255))
-screen.blit(clear_text, (w/2 - rate_text.get_width()/2, (h/12)*8 - clear_text.get_height()/2))
-time.sleep(5)
