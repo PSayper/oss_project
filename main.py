@@ -47,11 +47,15 @@ note_deploy_time = 0
 notedeployer_1 = 0
 notedeployer_2 = 0
 
-miss_anim = 0
+miss = 0
 combo = 0
 hp_max = 1300
 hp = hp_max
 rate = -1
+
+Sum = 0
+count = 0
+average = 0
 
 big_font = pygame.font.SysFont("arial", int(w/23), False, False)
 middle_font = pygame.font.SysFont("arial", int(w/46), False, False)
@@ -59,11 +63,11 @@ small_font = pygame.font.SysFont("arial", int(w/69), False, False)
 
 judgement_data = [0,0,0,0]
 def judge_note(n): # note judgement (BREAK, 1% ~ 100%)
-    global combo, miss_anim, last_combo, rate, hp
+    global combo, miss, last_combo, rate, hp, average, Sum, count
     
     if abs(Time - judgement_data[n - 1]) < 0.5 and abs(Time - judgement_data[n - 1]) >= 0.18:
         last_combo = combo
-        miss_anim = 1
+        miss += 1
         combo = 0
         rate = 0
         hp -= 100
@@ -115,6 +119,8 @@ def judge_note(n): # note judgement (BREAK, 1% ~ 100%)
     if(hp > hp_max):
         hp = hp_max
 
+        count += 1
+        Sum += rate
 
 def deploy_note(n): # function for summoning note
     ty = 0
@@ -242,6 +248,8 @@ while main:
                 combo = 0
                 rate = 0
                 hp -= 100
+                count += 1
+                Sum += rate
                 t1.remove(tile_data)
 
         for tile_data in t2: 
@@ -253,6 +261,8 @@ while main:
                 combo = 0
                 rate = 0
                 hp -= 100
+                count += 1
+                Sum += rate
                 t2.remove(tile_data)
 
         for tile_data in t3: 
@@ -264,6 +274,8 @@ while main:
                 combo = 0
                 rate = 0
                 hp -= 100
+                count += 1
+                Sum += rate
                 t3.remove(tile_data)
 
         for tile_data in t4: 
@@ -275,6 +287,8 @@ while main:
                 combo = 0
                 rate = 0
                 hp -= 100
+                count += 1
+                Sum += rate
                 t4.remove(tile_data)
 
         pygame.draw.rect(screen, (0,0,0), (w/2 - w/8, h/12*9 + judgeline_pos, w/4, h/2)) # visual judge line
@@ -307,8 +321,16 @@ while main:
         fps_text = middle_font.render("FPS: "+str(fps), False, (255, 255, 255))
         screen.blit(fps_text, (w - fps_text.get_width(), 0))
 
+        #평균 정확도 표시
+        if(count == 0):
+            average = 0.00
+        else:
+            average = int(Sum * 100 / count) / float(100)
+        average_text = small_font.render("RATE {:.2f}%".format(average), False, (255,255,255))
+        screen.blit(average_text, (w/2 - average_text.get_width()/2, (h/12)*7 - average_text.get_height()/2))
+
         #게임 종료 조건
-        if(Time >= 139 or HP <= 0):
+        if(Time >= 139 or hp <= 0):
             global end_time, clear
             end_time = Time
             ingame = False
