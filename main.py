@@ -167,7 +167,13 @@ while main:
         if Time > 60/178 * note_deploy_time: # randomly deploy note over tick
             note_deploy_time += 1
             notedeployer_1 = random.randint(1,4)
+            rand = random.randint(1, 4)
+            if(rand == 4):
+                while(notedeployer_1 == notedeployer_2):
+                    notedeployer_2 = random.randint(1, 4)
+                deploy_note(notedeployer_2)
             deploy_note(notedeployer_1)
+            notedeployer_2 = notedeployer_1
 
         Time = time.time() - gst
         fps = int(clock.get_fps()) # set fps
